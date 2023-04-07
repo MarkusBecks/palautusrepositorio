@@ -1,0 +1,8 @@
+* {
+    box-sizing: border-box;
+}
+
+.flag-container img {
+    border: 1px solid black;
+    padding: 5px;
+}
