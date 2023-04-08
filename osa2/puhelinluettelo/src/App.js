@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import personService from './services/persons'
-import axios from 'axios';
+import personService from './services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -17,7 +16,7 @@ const App = () => {
         setPersons(initialPersons)
       })
       .catch(error => {
-        console.log('failed');
+        console.log(error);
       })
   }, [])
 
@@ -45,6 +44,7 @@ const App = () => {
           }, 3000)
         })
         .catch(error => {
+          console.log(error);
           setErrMessage(`Adding ${existingPerson.name} failed`)
           setTimeout(() => {
             setErrMessage(null)
@@ -66,6 +66,7 @@ const App = () => {
             }, 3000)
           })
           .catch(error => {
+            console.log(error);
             setErrMessage(`Replacing ${existingPerson.name}'s number failed`)
             setTimeout(() => {
               setErrMessage(null)
@@ -107,6 +108,7 @@ const App = () => {
           }, 3000)
         })
         .catch(error => {
+          console.log(error);
           setErrMessage(`${name} has already been removed from server`)
           setTimeout(() => {
             setErrMessage(null)
