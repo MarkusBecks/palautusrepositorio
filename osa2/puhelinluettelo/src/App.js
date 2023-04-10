@@ -24,6 +24,14 @@ const App = () => {
   const upsertPerson = (event) => {
     event.preventDefault();
 
+    if (newName === '' || newNumber === '') {
+      setErrMessage(`Please enter a name and number`)
+      setTimeout(() => {
+        setErrMessage(null);
+      }, 3000);
+      return;
+    }
+
     const personObject = {
       name: newName,
       number: newNumber
@@ -44,11 +52,11 @@ const App = () => {
           }, 3000)
         })
         .catch(error => {
-          console.log(error);
-          setErrMessage(`Adding ${existingPerson.name} failed`)
+          console.log(error.response.data);
+          setErrMessage(error.response.data.error);
           setTimeout(() => {
             setErrMessage(null)
-          }, 3000)
+          }, 5000)
         })
     } else {
       // update the existing person
@@ -67,10 +75,10 @@ const App = () => {
           })
           .catch(error => {
             console.log(error);
-            setErrMessage(`Replacing ${existingPerson.name}'s number failed`)
+            setErrMessage(error.response.data.error);
             setTimeout(() => {
               setErrMessage(null)
-            }, 3000)
+            }, 5000)
           })
       }
     }
