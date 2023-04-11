@@ -9,11 +9,15 @@ blogsRouter.get('/', (req, res) => {
     })
 })
 
-blogsRouter.post('/api/blogs', (req, res, next) => {
-  const blog = new Blog(req.body)
+blogsRouter.post('/', (req, res, next) => {
+  const blog = new Blog({
+    title: req.body.title,
+    author: req.body.author,
+    url: req.body.url,
+    likes: req.body.likes
+  })
 
-  blog
-    .save()
+  blog.save()
     .then(result => {
       res.status(201).json(result)
     })
