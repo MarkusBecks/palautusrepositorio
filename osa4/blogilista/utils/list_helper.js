@@ -1,6 +1,6 @@
 const dummy = (blogs) => {
   return 1;
-}
+};
 
 const totalLikes = (blogs) => {
   const reducer = (sum, blog) => {
@@ -16,22 +16,22 @@ const favoriteBlog = (blogs) => {
         title: blog.title,
         author: blog.author,
         likes: blog.likes
-      }
+      };
     }
     return acc;
   };
   return blogs.reduce(reducer, {
     likes: -1 //make sure at least a blog with 0 likes is returned
   });
-}
+};
 
 const mostBlogs = (blogs) => {
   const authors = {};
   blogs.forEach(blog => {
-    if (authors.hasOwnProperty(blog.author)) {
+    if (blog.author in authors) {
       authors[blog.author].blogs += 1;
     } else {
-      authors[blog.author] = { author: blog.author, blogs: 1 }
+      authors[blog.author] = { author: blog.author, blogs: 1 };
     }
   });
   const reducer = (acc, author) => {
@@ -39,20 +39,20 @@ const mostBlogs = (blogs) => {
       return {
         author: author.author,
         blogs: author.blogs
-      }
+      };
     }
     return acc;
-  }
+  };
   return Object.values(authors).reduce(reducer, { author: '', blogs: 0 });
-}
+};
 
 const mostLikes = (blogs) => {
   const likesArr = {};
   blogs.forEach(blog => {
-    if (likesArr.hasOwnProperty(blog.author)) {
+    if (blog.author in likesArr) {
       likesArr[blog.author].likes += blog.likes;
     } else {
-      likesArr[blog.author] = { author: blog.author, likes: blog.likes }
+      likesArr[blog.author] = { author: blog.author, likes: blog.likes };
     }
   });
   const reducer = (acc, author) => {
@@ -60,9 +60,9 @@ const mostLikes = (blogs) => {
       return author;
     }
     return acc;
-  }
+  };
   return Object.values(likesArr).reduce(reducer, { author: '', likes: 0 });
-}
+};
 
 module.exports = {
   dummy,
@@ -70,4 +70,4 @@ module.exports = {
   favoriteBlog,
   mostBlogs,
   mostLikes
-}
+};

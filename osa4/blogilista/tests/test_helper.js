@@ -1,6 +1,6 @@
-const { favoriteBlog, totalLikes, mostBlogs, mostLikes } = require('../utils/list_helper');
+const Blog = require('../models/blog');
 
-const blogs = [
+const initialBlogs = [
   {
     _id: '5a422a851b54a676234d17f7',
     title: 'React patterns',
@@ -51,43 +51,10 @@ const blogs = [
   }
 ];
 
-describe('most liked blog', () => {
-  test('of blogs array', () => {
-    const result = favoriteBlog(blogs);
-    const mostLikes = {
-      title: 'Canonical string reduction',
-      author: 'Edsger W. Dijkstra',
-      likes: 12
-    };
-    expect(result).toEqual(mostLikes);
-  });
-});
+const blogsInDb = async () => {
+  return await Blog.find({});
+};
 
-describe('total likes', () => {
-  test('of blogs array', () => {
-    const result = totalLikes(blogs);
-    expect(result).toBe(36);
-  });
-});
-
-describe('author with most blogs', () => {
-  test('of blogs array', () => {
-    const result = mostBlogs(blogs);
-    const busyAuthor = {
-      author: 'Robert C. Martin',
-      blogs: 3
-    };
-    expect(result).toEqual(busyAuthor);
-  });
-});
-
-describe('most liked author', () => {
-  test('of blogs array', () => {
-    const result = mostLikes(blogs);
-    const likedAuthor = {
-      author: 'Edsger W. Dijkstra',
-      likes: 17
-    };
-    expect(result).toEqual(likedAuthor);
-  });
-});
+module.exports = {
+  initialBlogs, blogsInDb
+};
