@@ -2,8 +2,9 @@ POST http://localhost:3003/api/blogs/
 Content-Type: application/json
 
 {
-    "title": "Blogging is so 2000s",
+    "title": "Another blog",
     "author": "Bloggy Blogger",
-    "url": "http://www.aintarealthang.com",
-    "likes": 12
+    "url": "http://nicestblogaround.com",
+    "likes": 2,
+    "userId": "643ab9ed4ea5ad3315669937"
 }
