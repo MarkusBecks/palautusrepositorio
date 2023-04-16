@@ -1,10 +1,11 @@
 POST http://localhost:3003/api/blogs/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2NDNiMDQwMmNhNWRjNTAwYTAzZjMwYzEiLCJpYXQiOjE2ODE2NzYxMTJ9.2eBknxjfK2EMvDDUaWCWB_VCQKBc84LPtpWwVH7Y6Fg
 
 {
-    "title": "Another blog",
-    "author": "Bloggy Blogger",
-    "url": "http://nicestblogaround.com",
-    "likes": 2,
-    "userId": "643ab9ed4ea5ad3315669937"
+    "title": "Ninth blog",
+    "author": "Blogster Prime",
+    "url": "http://greatblogtakefour.com",
+    "likes": 9,
+    "userId": "643b0402ca5dc500a03f30c1"
 }
