@@ -1,4 +1,6 @@
 const logger = require('./logger');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 
 const requestLogger = (req, res, next) => {
   logger.info('Method:', req.method);
@@ -9,8 +11,11 @@ const requestLogger = (req, res, next) => {
 };
 
 const tokenExtractor = (req, res, next) => {
+  console.log('enter tokenExtractor');
   const getTokenFrom = req => {
     const auth = req.get('authorization');
+    console.log('auth: ', auth);
+    console.log('headers: ', req.headers);
     if (auth && auth.startsWith('Bearer ')) {
       return auth.replace('Bearer ', '');
     }
@@ -19,8 +24,28 @@ const tokenExtractor = (req, res, next) => {
 
   const token = getTokenFrom(req);
   req.token = token;
-  console.log('req.token: ', req.token);
+  console.log('tokenExtractor req.token: ', req.token);
 
+  next();
+};
+
+const userExtractor = async (req, res, next) => {
+  console.log('enter user extractor');
+  const token = req.token;
+  console.log('userExtractor token: ', token);
+  if (!token) {
+    return res.status(401).json({ error: 'missing token' });
+  }
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  console.log('decodedToken: ', decodedToken);
+  const user = await User.findById(decodedToken.id);
+
+  if (!user) {
+    return res.status(401).json({ error: 'invalid token' });
+  }
+
+  req.user = user;
+  console.log('userExtractor req.user: ', req.user);
   next();
 };
 
@@ -46,5 +71,6 @@ module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
-  tokenExtractor
+  tokenExtractor,
+  userExtractor
 };

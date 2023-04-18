@@ -1,3 +1,6 @@
+/* const app = require('../app');
+const supertest = require('supertest');
+const api = supertest(app); */
 const Blog = require('../models/blog');
 const User = require('../models/user');
 
@@ -60,6 +63,13 @@ const usersInDb = async () => {
   return await User.find({});
 };
 
+const removeTestUser = async () => {
+  return await User.findOneAndDelete({ username: 'testuser' });
+};
+const removeTestBlog = async () => {
+  return await Blog.findOneAndDelete({ title: 'Test Blog' });
+};
+
 module.exports = {
-  initialBlogs, blogsInDb, usersInDb
+  initialBlogs, blogsInDb, usersInDb, removeTestUser, removeTestBlog
 };

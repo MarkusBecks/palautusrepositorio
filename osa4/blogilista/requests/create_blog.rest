@@ -1,11 +1,11 @@
 POST http://localhost:3003/api/blogs/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2NDNiMDQwMmNhNWRjNTAwYTAzZjMwYzEiLCJpYXQiOjE2ODE2NzYxMTJ9.2eBknxjfK2EMvDDUaWCWB_VCQKBc84LPtpWwVH7Y6Fg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1ha2UiLCJpZCI6IjY0M2U0N2RkYjk2ZGQxMGQ2NThiODc5ZCIsImlhdCI6MTY4MTgwMzI0M30.10R4lHovTJizwxVi086YjTN-cZvWOZP-vx1JrVwoc3c
 
 {
-    "title": "Ninth blog",
-    "author": "Blogster Prime",
+    "title": "Maken blogi2",
+    "author": "Make",
     "url": "http://greatblogtakefour.com",
     "likes": 9,
-    "userId": "643b0402ca5dc500a03f30c1"
+    "userId": "643e47ddb96dd10d658b879d"
 }
