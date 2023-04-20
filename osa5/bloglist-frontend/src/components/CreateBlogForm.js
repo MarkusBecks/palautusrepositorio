@@ -1,8 +1,8 @@
-const CreateBlogForm = ({ handleCreateBlog, title, setTitle, author, setAuthor, url, setUrl }) => {
+const AddBlogForm = ({ addBlog, title, setTitle, author, setAuthor, url, setUrl }) => {
   return (
     <div>
       <h2>create new</h2>
-      <form onSubmit={handleCreateBlog}>
+      <form onSubmit={addBlog}>
         <div>
           title:
           <input type='text' value={title} name='Title'
@@ -26,4 +26,4 @@ const CreateBlogForm = ({ handleCreateBlog, title, setTitle, author, setAuthor, 
   )
 }
 
-export default CreateBlogForm
+export default AddBlogForm
