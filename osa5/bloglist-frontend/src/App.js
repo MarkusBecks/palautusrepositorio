@@ -80,6 +80,7 @@ const App = () => {
   }
 
   const handleLogout = (username) => {
+    window.localStorage.removeItem('loggedBloglistUser')
     setSuccessMsg(`See you soon again, ${username}`)
     setUser(null)
   }
