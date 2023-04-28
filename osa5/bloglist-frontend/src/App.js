@@ -75,6 +75,16 @@ const App = () => {
     }
   }
 
+  const handleLike = async (blogId) => {
+    try {
+      const blogToLike = blogs.find(blog => blog.id === blogId)
+      const updatedBlog = await blogService.update(blogId, { ...blogToLike, likes: blogToLike.likes + 1 })
+      setBlogs(blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleLogout = (username) => {
     window.localStorage.removeItem('loggedBloglistUser')
     setSuccessMsg(`See you soon, ${username}`)
@@ -108,7 +118,7 @@ const App = () => {
 
           {sortedBlogs.map(blog =>
             <Blog key={blog.id} blog={blog} user={user}
-              blogs={blogs} setBlogs={setBlogs}
+              blogs={blogs} setBlogs={setBlogs} handleLike={handleLike}
               setSuccessMsg={setSuccessMsg} setErrorMsg={setErrorMsg} />
           )}
         </div>

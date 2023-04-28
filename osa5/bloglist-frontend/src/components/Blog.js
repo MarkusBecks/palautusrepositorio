@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, user, blogs, setBlogs, setSuccessMsg, setErrorMsg }) => {
+const Blog = ({ blog, user, blogs, setBlogs, setSuccessMsg, setErrorMsg, handleLike }) => {
   const [visible, setVisible] = useState(false)
-  const [likes, setLikes] = useState(blog.likes)
 
   const blogStyle = {
     padding: 8,
@@ -15,19 +14,7 @@ const Blog = ({ blog, user, blogs, setBlogs, setSuccessMsg, setErrorMsg }) => {
     setVisible(!visible)
   }
 
-  const handleLike = async () => {
-    console.log('handleLike')
-    setLikes(likes + 1)
-    console.log('likes: ', likes)
-    try {
-      await blogService.update(blog.id, { ...blog, likes: likes + 1 })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   const handleDelete = async () => {
-
     console.log('blog.title: ', blog.title)
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       try {
@@ -46,6 +33,7 @@ const Blog = ({ blog, user, blogs, setBlogs, setSuccessMsg, setErrorMsg }) => {
 
   const isAuthorized = () => {
     if (blog.user && blog.user.username === user.username) {
+      //username is required & unique
       return true
     } else {
       return false
@@ -53,21 +41,22 @@ const Blog = ({ blog, user, blogs, setBlogs, setSuccessMsg, setErrorMsg }) => {
   }
 
   const username = blog.user ? blog.user.username : 'anonymous'
+  //if blog has no user, use a default username
 
   return (
-    <div style={blogStyle}>
-      <div>
-        {blog.title} | {blog.author}<button onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
+    <div className='blog' style={blogStyle}>
+      <div className='blog-title-and-author'>
+        {blog.title} | {blog.author}<button onClick={toggleVisibility} className='viewButton'>{visible ? 'hide' : 'view'}</button>
       </div>
       {visible && (
         <>
-          <div>
+          <div className='url'>
             {blog.url}
           </div>
-          <div>
-            likes {likes} <button onClick={handleLike}>like</button>
+          <div className='likes'>
+            likes {blog.likes} <button onClick={() => handleLike(blog.id)} className='likesButton'>like</button>
           </div>
-          <div>
+          <div className='username'>
             Added by {username}
           </div>
           {isAuthorized() && (
