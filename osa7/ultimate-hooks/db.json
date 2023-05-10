@@ -7,6 +7,10 @@
     {
       "id": 2,
       "content": "best feature ever <3"
+    },
+    {
+      "content": "cool note",
+      "id": 3
     }
   ],
   "persons": [
@@ -19,6 +23,11 @@
       "id": 2,
       "name": "Tarja Halonen",
       "number": "040-2223334"
+    },
+    {
+      "name": "sauli niinistö",
+      "number": "040-12356",
+      "id": 3
     }
   ]
 }
