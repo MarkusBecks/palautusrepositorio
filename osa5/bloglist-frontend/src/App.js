@@ -19,11 +19,10 @@ const App = () => {
   const AddBlogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll()
-      .then(blogs =>
-        setBlogs(blogs)
-      )
-      .catch(error => {
+    blogService
+      .getAll()
+      .then((blogs) => setBlogs(blogs))
+      .catch((error) => {
         console.log(error)
       })
   }, [])
@@ -40,12 +39,9 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService
-        .login({ username, password })
+      const user = await loginService.login({ username, password })
 
-      window.localStorage.setItem(
-        'loggedBloglistUser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
 
       blogService.setToken(user.token)
       setUser(user)
@@ -65,7 +61,9 @@ const App = () => {
       const addedBlog = await blogService.get(returnedBlog.id)
       console.log('addedBlog:', addedBlog)
       setBlogs(blogs.concat(addedBlog))
-      setSuccessMsg(`Blog ${returnedBlog.title} by ${returnedBlog.author} added!`)
+      setSuccessMsg(
+        `Blog ${returnedBlog.title} by ${returnedBlog.author} added!`
+      )
     } catch (error) {
       if (error && error.response.data.error) {
         setErrorMsg(error.response.data.error)
@@ -77,9 +75,17 @@ const App = () => {
 
   const handleLike = async (blogId) => {
     try {
-      const blogToLike = blogs.find(blog => blog.id === blogId)
-      const updatedBlog = await blogService.update(blogId, { ...blogToLike, likes: blogToLike.likes + 1 })
-      setBlogs(blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog))
+      console.log('blogId:', blogId)
+      const blogToLike = blogs.find((blog) => blog.id === blogId)
+      console.log('blogToLike:', blogToLike)
+      const updatedBlog = await blogService.update(blogId, {
+        ...blogToLike,
+        likes: blogToLike.likes + 1,
+      })
+      console.log('updatedBlog:', updatedBlog)
+      setBlogs(
+        blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog))
+      )
     } catch (error) {
       console.log(error)
     }
@@ -91,41 +97,52 @@ const App = () => {
     setUser(null)
   }
 
-  const descendingLikes = (a, b) => (b.likes - a.likes)
+  const descendingLikes = (a, b) => b.likes - a.likes
   const sortedBlogs = [...blogs].sort(descendingLikes)
 
   return (
     <div>
       <Notification
-        successMsg={successMsg} setSuccessMsg={setSuccessMsg}
-        errorMsg={errorMsg} setErrorMsg={setErrorMsg}
+        successMsg={successMsg}
+        setSuccessMsg={setSuccessMsg}
+        errorMsg={errorMsg}
+        setErrorMsg={setErrorMsg}
       />
-      {user === null ?
+      {user === null ? (
         <LoginForm
           handleLogin={handleLogin}
-          username={username} setUsername={setUsername}
-          password={password} setPassword={setPassword}
+          username={username}
+          setUsername={setUsername}
+          password={password}
+          setPassword={setPassword}
         />
-        :
+      ) : (
         <div>
           <h2>blogs</h2>
-          <p>{user.name} logged in <button onClick={() => handleLogout(user.username)}>logout</button></p>
+          <p>
+            {user.name} logged in{' '}
+            <button onClick={() => handleLogout(user.username)}>logout</button>
+          </p>
           <Togglable buttonLabel="new blog" ref={AddBlogFormRef}>
-            <AddBlogForm
-              buttonLabel="create" addBlog={addBlog}
-            />
+            <AddBlogForm buttonLabel="create" addBlog={addBlog} />
           </Togglable>
 
-          {sortedBlogs.map(blog =>
-            <Blog key={blog.id} blog={blog} user={user}
-              blogs={blogs} setBlogs={setBlogs} handleLike={handleLike}
-              setSuccessMsg={setSuccessMsg} setErrorMsg={setErrorMsg} />
-          )}
+          {sortedBlogs.map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              user={user}
+              blogs={blogs}
+              setBlogs={setBlogs}
+              setSuccessMsg={setSuccessMsg}
+              setErrorMsg={setErrorMsg}
+              handleLike={handleLike}
+            />
+          ))}
         </div>
-      }
+      )}
     </div>
   )
-
 }
 
 export default App

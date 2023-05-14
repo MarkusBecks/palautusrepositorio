@@ -1,0 +1,11 @@
+POST http://localhost:3003/api/testing/reset
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1ha2UiLCJpZCI6IjY0M2U0N2RkYjk2ZGQxMGQ2NThiODc5ZCIsImlhdCI6MTY4MTgwMzI0M30.10R4lHovTJizwxVi086YjTN-cZvWOZP-vx1JrVwoc3c
+
+{
+    "title": "Maken blogi2",
+    "author": "Make",
+    "url": "http://greatblogtakefour.com",
+    "likes": 9,
+    "userId": "643e47ddb96dd10d658b879d"
+}

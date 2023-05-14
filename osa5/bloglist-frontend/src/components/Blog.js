@@ -1,14 +1,22 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, user, blogs, setBlogs, setSuccessMsg, setErrorMsg, handleLike }) => {
+const Blog = ({
+  blog,
+  user,
+  blogs,
+  setBlogs,
+  setSuccessMsg,
+  setErrorMsg,
+  handleLike,
+}) => {
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
     padding: 8,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5
+    marginBottom: 5,
   }
   const toggleVisibility = () => {
     setVisible(!visible)
@@ -26,40 +34,42 @@ const Blog = ({ blog, user, blogs, setBlogs, setSuccessMsg, setErrorMsg, handleL
         setSuccessMsg(`Blog ${blog.title} by ${blog.author} deleted.`)
       } catch (error) {
         console.log(error)
-        setErrorMsg(`Error deleting blog ${blog.title}: ${error.response.data.error}`)
+        setErrorMsg(
+          `Error deleting blog ${blog.title}: ${error.response.data.error}`
+        )
       }
     }
   }
 
-  const isAuthorized = () => {
-    if (blog.user && blog.user.username === user.username) {
-      //username is required & unique
-      return true
-    } else {
-      return false
-    }
-  }
+  const isAuthorized = blog.user && blog.user.username === user.username
 
-  const username = blog.user ? blog.user.username : 'anonymous'
-  //if blog has no user, use a default username
+  console.log('blog:', blog)
+  console.log('user:', user)
+  const username =
+    blog.user && blog.user.username ? blog.user.username : 'anonymous'
+
+  console.log('username:', username)
+  console.log('blog.user.username:', blog.user ? blog.user.username : 'N/A')
 
   return (
-    <div className='blog' style={blogStyle}>
-      <div className='blog-title-and-author'>
-        {blog.title} | {blog.author}<button onClick={toggleVisibility} className='viewButton'>{visible ? 'hide' : 'view'}</button>
+    <div className="blog" style={blogStyle}>
+      <div className="blog-title-and-author">
+        {blog.title} | {blog.author}
+        <button onClick={toggleVisibility} className="viewButton">
+          {visible ? 'hide' : 'view'}
+        </button>
       </div>
       {visible && (
         <>
-          <div className='url'>
-            {blog.url}
+          <div className="url">{blog.url}</div>
+          <div className="likes">
+            likes {blog.likes}
+            <button onClick={() => handleLike(blog.id)} className="likesButton">
+              like
+            </button>
           </div>
-          <div className='likes'>
-            likes {blog.likes} <button onClick={() => handleLike(blog.id)} className='likesButton'>like</button>
-          </div>
-          <div className='username'>
-            Added by {username}
-          </div>
-          {isAuthorized() && (
+          <div className="username">Added by {username}</div>
+          {isAuthorized && (
             <div>
               <button onClick={handleDelete}>remove blog</button>
             </div>
