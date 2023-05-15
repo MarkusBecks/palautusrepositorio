@@ -1,0 +1,7 @@
+# Ignore root level node_modules
+/node_modules
+
+# Common
+.env
+.DS_Store
+*.log
