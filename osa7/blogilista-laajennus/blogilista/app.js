@@ -6,7 +6,7 @@ const cors = require('cors')
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
-const testRouter = require('./controllers/testing')
+require('./controllers/testing')
 const {
   requestLogger,
   unknownEndpoint,

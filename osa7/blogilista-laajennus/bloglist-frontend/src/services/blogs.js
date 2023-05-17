@@ -28,8 +28,15 @@ const create = async newObject => {
 }
 
 const update = async (id, newObject) => {
-  const response = await axios.put(`${baseUrl}/${id}`, newObject)
-  return response.data
+  console.log('UPDATE ROUTE id: ', id)
+  console.log('UPDATE ROUTE newObject: ', newObject)
+  try {
+    const response = await axios.put(`${baseUrl}/${id}`, newObject)
+    return response.data
+  } catch (error) {
+    console.log('Update failed:', error)
+    throw error
+  }
 }
 
 const destroy = async id => {

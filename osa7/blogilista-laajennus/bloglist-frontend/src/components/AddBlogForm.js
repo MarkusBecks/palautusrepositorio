@@ -1,10 +1,30 @@
 import { useState } from 'react'
-import PropTypes from 'prop-types'
+import { useMutation, useQueryClient } from 'react-query'
+import blogService from '../services/blogs'
+import { useNotificationDispatch } from '../NotificationContext'
 
-const AddBlogForm = ({ addBlog, buttonLabel }) => {
+const AddBlogForm = ({ addBlogFormRef }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const queryClient = useQueryClient()
+  const showNotification = useNotificationDispatch()
+
+  const createBlogMutation = useMutation(blogService.create, {
+    onSuccess: returnedBlog => {
+      queryClient.invalidateQueries('blogs')
+      showNotification(
+        `Blog '${returnedBlog.title}' by ${returnedBlog.author} added!`,
+        'success'
+      )
+      console.log('addBlogFormRef: ', addBlogFormRef)
+      console.log('addBlogFormRef.current: ', addBlogFormRef.current)
+      addBlogFormRef.current.toggleVisibility()
+    },
+    onError: error => {
+      showNotification(error.response.data.error, 'error')
+    },
+  })
 
   const resetForm = () => {
     setTitle('')
@@ -14,10 +34,10 @@ const AddBlogForm = ({ addBlog, buttonLabel }) => {
 
   const createBlog = event => {
     event.preventDefault()
-    addBlog({
-      title: title,
-      author: author,
-      url: url,
+    createBlogMutation.mutate({
+      title,
+      author,
+      url,
     })
     resetForm()
   }
@@ -61,17 +81,12 @@ const AddBlogForm = ({ addBlog, buttonLabel }) => {
         </div>
         <div>
           <button id="create" type="submit">
-            {buttonLabel}
+            create
           </button>
         </div>
       </form>
     </div>
   )
-}
-
-AddBlogForm.propTypes = {
-  addBlog: PropTypes.func.isRequired,
-  buttonLabel: PropTypes.string.isRequired,
 }
 
 export default AddBlogForm
