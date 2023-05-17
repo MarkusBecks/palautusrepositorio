@@ -27,13 +27,12 @@ const create = async newObject => {
   return response.data
 }
 
-const update = async (id, newObject) => {
+const update = async updateData => {
+  const { id, newObject } = updateData
   console.log('UPDATE ROUTE id: ', id)
   console.log('UPDATE ROUTE newObject: ', newObject)
   try {
-    const response = await axios.put(`${baseUrl}/${id}`, newObject, {
-      headers: { 'Content-Type': 'application/json' },
-    })
+    const response = await axios.put(`${baseUrl}/${id}`, newObject)
     return response.data
   } catch (error) {
     console.log('Update failed:', error)

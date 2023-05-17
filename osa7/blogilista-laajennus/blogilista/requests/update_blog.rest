@@ -2,7 +2,7 @@ PUT http://localhost:3003/api/blogs/646220337c78739c600aa5f9
 Content-Type: application/json
 
 {
-    "title": "React patterns",
+    "title": "React patternz",
     "author": "Michael Chan",
     "url": "https://reactpatterns.com/",
     "likes": 12

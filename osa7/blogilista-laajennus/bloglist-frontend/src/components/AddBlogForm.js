@@ -84,7 +84,7 @@ const AddBlogForm = ({ addBlogFormRef }) => {
             type="submit"
             disabled={createBlogMutation.isLoading}
           >
-            create
+            {createBlogMutation.isLoading ? 'Creating...' : 'create'}
           </button>
         </div>
       </form>

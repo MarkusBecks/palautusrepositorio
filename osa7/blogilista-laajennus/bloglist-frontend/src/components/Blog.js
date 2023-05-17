@@ -18,8 +18,21 @@ const Blog = ({ blog, user }) => {
     setVisible(!visible)
   }
 
-  const updateBlogMutation = useMutation({
+  /* const updateBlogMutation = useMutation({
     mutationFn: blogService.update,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['blogs'])
+      console.log('Update successful')
+    },
+    onError: error => {
+      showNotification(error.response.data.error, 'error')
+    },
+  }) */
+
+  const updateBlogMutation = useMutation({
+    mutationFn: updateData => {
+      return blogService.update(updateData)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['blogs'])
       console.log('Update successful')
@@ -30,14 +43,27 @@ const Blog = ({ blog, user }) => {
   })
 
   const handleLike = blog => {
+    console.log('handleLike blog:', blog)
+    const updatedBlog = {
+      id: blog.id,
+      newObject: {
+        ...blog,
+        likes: blog.likes + 1,
+      },
+    }
+    console.log('handleLike updatedBlog:', updatedBlog)
+    updateBlogMutation.mutate(updatedBlog)
+  }
+
+  /* const handleLike = blog => {
     console.log('handleLike blog :', blog)
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1,
     }
     console.log('handleLike updatedBlog :', updatedBlog)
-    updateBlogMutation.mutate(blog.id, updatedBlog)
-  }
+    updateBlogMutation.mutate(updatedBlog.id, updatedBlog)
+  } */
 
   const deleteBlogMutation = useMutation({
     mutationFn: blogService.destroy,
@@ -85,7 +111,7 @@ const Blog = ({ blog, user }) => {
               onClick={() => handleLike(blog)}
               className="likesButton"
             >
-              like
+              {updateBlogMutation.isLoading ? 'Updating...' : 'like'}
             </button>
           </div>
           <div className="username">Added by {username}</div>
