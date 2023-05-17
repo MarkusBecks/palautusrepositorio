@@ -8,7 +8,7 @@ import loginService from './services/login'
 import './app.css'
 import Togglable from './components/Togglable'
 import { useNotificationDispatch } from './NotificationContext'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -17,20 +17,17 @@ const App = () => {
   const showNotification = useNotificationDispatch()
   const addBlogFormRef = useRef()
 
-  const result = useQuery('blogs', blogService.getAll, {
-    refetchOnWindowFocus: false,
+  const blogsQuery = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getAll,
   })
 
-  if (result.isLoading) {
-    return <div>Loading data...</div>
-  }
+  if (blogsQuery.isInitialLoading) return <div>Loading data...</div>
+  if (blogsQuery.isError) return <div>Service not available</div>
 
-  if (result.isError) {
-    return <div>Service not available due to problems in server</div>
-  }
+  const blogs = blogsQuery.data
 
   const descendingLikes = (a, b) => b.likes - a.likes
-  const blogs = result.data
   const sortedBlogs = [...blogs].sort(descendingLikes)
 
   /* useEffect(() => {

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 import { useNotificationDispatch } from '../NotificationContext'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 const Blog = ({ blog, user }) => {
   const [visible, setVisible] = useState(false)
@@ -18,9 +18,10 @@ const Blog = ({ blog, user }) => {
     setVisible(!visible)
   }
 
-  const updateBlogMutation = useMutation(blogService.update, {
+  const updateBlogMutation = useMutation({
+    mutationFn: blogService.update,
     onSuccess: () => {
-      queryClient.invalidateQueries('blogs')
+      queryClient.invalidateQueries(['blogs'])
       console.log('Update successful')
     },
     onError: error => {
@@ -38,44 +39,10 @@ const Blog = ({ blog, user }) => {
     updateBlogMutation.mutate(blog.id, updatedBlog)
   }
 
-  /* const updateBlogMutation = useMutation(
-    updatedBlog => blogService.update(blog.id, updatedBlog),
-    {
-      onMutate: updatedBlog => {
-        // Access the current state of the blog before the mutation
-        const previousBlog = queryClient.getQueryData(['blogs', blog.id])
-
-        // Optimistically update the blog state
-        queryClient.setQueryData(['blogs', blog.id], oldData => ({
-          ...oldData,
-          ...updatedBlog,
-        }))
-
-        // Return the previous blog state to use for rollback in case of error
-        return previousBlog
-      },
-      onError: (error, updatedBlog, previousBlog) => {
-        // Rollback to the previous blog state in case of error
-        queryClient.setQueryData(['blogs', blog.id], previousBlog)
-        showNotification(error.response.data.error, 'error')
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries('blogs')
-        showNotification('Blog updated successfully.', 'success')
-      },
-    }
-  )
-
-  const handleLike = blogId => {
-    updateBlogMutation.mutate(blogId, {
-      ...blog,
-      likes: blog.likes + 1,
-    })
-  } */
-
-  const deleteBlogMutation = useMutation(blogService.destroy, {
+  const deleteBlogMutation = useMutation({
+    mutationFn: blogService.destroy,
     onSuccess: () => {
-      queryClient.invalidateQueries('blogs')
+      queryClient.invalidateQueries(['blogs'])
       showNotification(
         `Blog '${blog.title}' by ${blog.author} deleted.`,
         'success'
@@ -113,7 +80,11 @@ const Blog = ({ blog, user }) => {
           <div className="url">{blog.url}</div>
           <div className="likes">
             likes {blog.likes}
-            <button onClick={() => handleLike(blog)} className="likesButton">
+            <button
+              disabled={updateBlogMutation.isLoading}
+              onClick={() => handleLike(blog)}
+              className="likesButton"
+            >
               like
             </button>
           </div>

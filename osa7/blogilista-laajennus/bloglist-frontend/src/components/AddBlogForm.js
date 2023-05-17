@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import blogService from '../services/blogs'
 import { useNotificationDispatch } from '../NotificationContext'
 
@@ -10,15 +10,14 @@ const AddBlogForm = ({ addBlogFormRef }) => {
   const queryClient = useQueryClient()
   const showNotification = useNotificationDispatch()
 
-  const createBlogMutation = useMutation(blogService.create, {
+  const createBlogMutation = useMutation({
+    mutationFn: blogService.create,
     onSuccess: returnedBlog => {
-      queryClient.invalidateQueries('blogs')
+      queryClient.invalidateQueries(['blogs'])
       showNotification(
         `Blog '${returnedBlog.title}' by ${returnedBlog.author} added!`,
         'success'
       )
-      console.log('addBlogFormRef: ', addBlogFormRef)
-      console.log('addBlogFormRef.current: ', addBlogFormRef.current)
       addBlogFormRef.current.toggleVisibility()
     },
     onError: error => {
@@ -80,7 +79,11 @@ const AddBlogForm = ({ addBlogFormRef }) => {
           />
         </div>
         <div>
-          <button id="create" type="submit">
+          <button
+            id="create"
+            type="submit"
+            disabled={createBlogMutation.isLoading}
+          >
             create
           </button>
         </div>
