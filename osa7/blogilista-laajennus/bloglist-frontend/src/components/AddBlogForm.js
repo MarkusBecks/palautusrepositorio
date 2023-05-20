@@ -25,12 +25,6 @@ const AddBlogForm = ({ addBlogFormRef }) => {
     },
   })
 
-  const resetForm = () => {
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-  }
-
   const createBlog = event => {
     event.preventDefault()
     createBlogMutation.mutate({
@@ -38,7 +32,9 @@ const AddBlogForm = ({ addBlogFormRef }) => {
       author,
       url,
     })
-    resetForm()
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   return (

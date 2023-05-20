@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 import { useNotificationDispatch } from '../NotificationContext'
+import { useUserValue } from '../UserContext'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false)
   const showNotification = useNotificationDispatch()
+  const { user } = useUserValue()
   const queryClient = useQueryClient()
 
   const blogStyle = {
@@ -17,17 +19,6 @@ const Blog = ({ blog, user }) => {
   const toggleVisibility = () => {
     setVisible(!visible)
   }
-
-  /* const updateBlogMutation = useMutation({
-    mutationFn: blogService.update,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['blogs'])
-      console.log('Update successful')
-    },
-    onError: error => {
-      showNotification(error.response.data.error, 'error')
-    },
-  }) */
 
   const updateBlogMutation = useMutation({
     mutationFn: updateData => {
@@ -55,16 +46,6 @@ const Blog = ({ blog, user }) => {
     updateBlogMutation.mutate(updatedBlog)
   }
 
-  /* const handleLike = blog => {
-    console.log('handleLike blog :', blog)
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-    }
-    console.log('handleLike updatedBlog :', updatedBlog)
-    updateBlogMutation.mutate(updatedBlog.id, updatedBlog)
-  } */
-
   const deleteBlogMutation = useMutation({
     mutationFn: blogService.destroy,
     onSuccess: () => {
@@ -88,7 +69,7 @@ const Blog = ({ blog, user }) => {
     }
   }
 
-  const isAuthorized = blog.user && blog.user.username === user.username
+  const isAuthorized = user && blog.user && blog.user.username === user.username
 
   const username =
     blog.user && blog.user.username ? blog.user.username : 'anonymous'

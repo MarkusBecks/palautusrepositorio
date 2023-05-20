@@ -62,25 +62,6 @@ blogsRouter.put('/:id', async (req, res) => {
   console.log('req.params.id:', req.params.id)
   console.log('req.body:', req.body)
 
-  const blog = await Blog.findById(req.params.id)
-
-  if (!blog) {
-    return res.status(404).json({ error: 'Blog not found' })
-  }
-
-  blog.likes += 1
-
-  const updatedBlog = await blog.save()
-
-  console.log('updatedBlog:', updatedBlog)
-
-  res.json(updatedBlog)
-})
-
-/* blogsRouter.put('/:id', async (req, res) => {
-  console.log('req.params.id:', req.params.id)
-  console.log('req.body:', req.body)
-
   const body = req.body
   const blog = {
     title: body.title,
@@ -96,6 +77,6 @@ blogsRouter.put('/:id', async (req, res) => {
   console.log('updatedBlog:', updatedBlog)
 
   res.json(updatedBlog)
-}) */
+})
 
 module.exports = blogsRouter
