@@ -24,6 +24,7 @@ export const NotificationContextProvider = props => {
   )
 
   const showNotification = (message, type) => {
+    console.log('showing notification')
     notificationDispatch({ type: 'SET', payload: { message, type } })
     setTimeout(() => {
       notificationDispatch({ type: 'CLEAR' })

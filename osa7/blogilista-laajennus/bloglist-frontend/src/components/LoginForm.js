@@ -1,6 +1,6 @@
 import { useState } from 'react'
 //import PropTypes from 'prop-types'
-import { useUserValue, useUserDispatch } from '../UserContext'
+import { useUserDispatch } from '../UserContext'
 import loginService from '../services/login'
 import { useNotificationDispatch } from '../NotificationContext'
 import blogService from '../services/blogs'
@@ -10,7 +10,6 @@ const LoginForm = () => {
   const [password, setPassword] = useState('')
   const dispatch = useUserDispatch()
   const showNotification = useNotificationDispatch()
-  const { user } = useUserValue()
 
   const handleLogin = async event => {
     event.preventDefault()
@@ -30,52 +29,34 @@ const LoginForm = () => {
     }
   }
 
-  const handleLogout = user => {
-    window.localStorage.removeItem('loggedBloglistUser')
-    showNotification(`See you soon, ${user.username}!`, 'success')
-    dispatch({ type: 'LOGOUT' })
-  }
-
   return (
     <div>
-      {!user ? (
-        <>
-          <h2>Log in to application</h2>
-          <form onSubmit={handleLogin}>
-            <div>
-              username
-              <input
-                id="username"
-                type="text"
-                value={username}
-                name="Username"
-                onChange={({ target }) => setUsername(target.value)}
-              />
-            </div>
-            <div>
-              password
-              <input
-                id="password"
-                type="password"
-                value={password}
-                name="Password"
-                onChange={({ target }) => setPassword(target.value)}
-              />
-            </div>
-            <button id="login-button" type="submit">
-              login
-            </button>
-          </form>
-        </>
-      ) : (
-        <>
-          <h2>blogs</h2>
-          <p>
-            {user.name} logged in
-            <button onClick={() => handleLogout(user)}>logout</button>
-          </p>
-        </>
-      )}
+      <h2>Log in to application</h2>
+      <form onSubmit={handleLogin}>
+        <div>
+          username
+          <input
+            id="username"
+            type="text"
+            value={username}
+            name="Username"
+            onChange={({ target }) => setUsername(target.value)}
+          />
+        </div>
+        <div>
+          password
+          <input
+            id="password"
+            type="password"
+            value={password}
+            name="Password"
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </div>
+        <button id="login-button" type="submit">
+          login
+        </button>
+      </form>
     </div>
   )
 }

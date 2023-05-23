@@ -13,7 +13,7 @@ const AddBlogForm = ({ addBlogFormRef }) => {
   const createBlogMutation = useMutation({
     mutationFn: blogService.create,
     onSuccess: returnedBlog => {
-      queryClient.invalidateQueries(['blogs'])
+      queryClient.invalidateQueries()
       showNotification(
         `Blog '${returnedBlog.title}' by ${returnedBlog.author} added!`,
         'success'
