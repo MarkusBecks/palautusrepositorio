@@ -1,5 +1,6 @@
 import userService from '../services/users'
 import { useQuery } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
 
 const Users = () => {
   const containerStyle = {
@@ -46,7 +47,7 @@ const Users = () => {
         </div>
         {sortedUsers.map(user => (
           <div key={user.id} style={userStyle}>
-            <div>{user.name}</div>
+            <Link to={`/users/${user.id}`}>{user.name}</Link>
             <div>{user.blogs.length}</div>
           </div>
         ))}

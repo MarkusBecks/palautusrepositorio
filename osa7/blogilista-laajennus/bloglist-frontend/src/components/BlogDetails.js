@@ -1,6 +1,6 @@
 import blogService from '../services/blogs'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useUserValue } from '../UserContext'
 import { useNotificationDispatch } from '../NotificationContext'
 
@@ -10,7 +10,6 @@ const BlogDetails = () => {
   const queryClient = useQueryClient()
   const showNotification = useNotificationDispatch()
   const navigate = useNavigate()
-  console.log('blogId:', id)
 
   const blogQuery = useQuery({
     queryKey: ['blogs', 'getBlog', id],
@@ -18,6 +17,7 @@ const BlogDetails = () => {
   })
 
   const blog = blogQuery.data || {}
+  console.log('blog:', blog)
 
   const updateBlogMutation = useMutation({
     mutationFn: updateData => {
@@ -48,11 +48,12 @@ const BlogDetails = () => {
   const deleteBlogMutation = useMutation({
     mutationFn: blogService.destroy,
     onSuccess: () => {
-      queryClient.invalidateQueries()
+      queryClient.invalidateQueries(['blogs', 'getBlog', id])
       showNotification(
         `Blog '${blog.title}' by ${blog.author} deleted.`,
         'success'
       )
+      navigate('/blogs')
     },
     onError: error => {
       showNotification(
@@ -86,6 +87,9 @@ const BlogDetails = () => {
       <h2>
         {blog.title} by {blog.author}
       </h2>
+      <div>
+        <Link to={blog.url}>{blog.url}</Link>
+      </div>
       <div className="likes">
         likes {blog.likes}
         <button
@@ -96,7 +100,6 @@ const BlogDetails = () => {
           {updateBlogMutation.isLoading ? 'Updating...' : 'like'}
         </button>
       </div>
-      <div>{blog.url}</div>
       <div>added by {username}</div>
       {isAuthorized && (
         <div>

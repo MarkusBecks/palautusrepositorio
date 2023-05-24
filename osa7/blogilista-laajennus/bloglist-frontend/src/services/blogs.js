@@ -29,7 +29,6 @@ const create = async newObject => {
 
 const update = async updateData => {
   const { id, newObject } = updateData
-  console.log('UPDATE ROUTE id: ', id)
   console.log('UPDATE ROUTE newObject: ', newObject)
   try {
     const response = await axios.put(`${baseUrl}/${id}`, newObject)
@@ -48,4 +47,26 @@ const destroy = async id => {
   await axios.delete(`${baseUrl}/${id}`, config)
 }
 
-export default { setToken, getAll, get, create, update, destroy }
+const getComments = async id => {
+  const response = await axios.get(`${baseUrl}/${id}/comments`)
+  return response.data
+}
+
+const postComment = async commentData => {
+  const { id, comment } = commentData
+  const response = await axios.post(`${baseUrl}/${id}/comments`, {
+    content: comment,
+  })
+  return response.data
+}
+
+export default {
+  setToken,
+  getAll,
+  get,
+  create,
+  update,
+  destroy,
+  getComments,
+  postComment,
+}

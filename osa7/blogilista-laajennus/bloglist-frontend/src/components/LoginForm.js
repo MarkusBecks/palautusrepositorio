@@ -4,12 +4,14 @@ import { useUserDispatch } from '../UserContext'
 import loginService from '../services/login'
 import { useNotificationDispatch } from '../NotificationContext'
 import blogService from '../services/blogs'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const dispatch = useUserDispatch()
   const showNotification = useNotificationDispatch()
+  const navigate = useNavigate()
 
   const handleLogin = async event => {
     event.preventDefault()
@@ -24,6 +26,7 @@ const LoginForm = () => {
 
       dispatch({ type: 'LOGIN', payload: { user } })
       showNotification(`Welcome, ${username}!`, 'success')
+      navigate('/blogs')
     } catch (error) {
       showNotification(error.response.data.error, 'error')
     }

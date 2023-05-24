@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import blogService from '../services/blogs'
 import { useNotificationDispatch } from '../NotificationContext'
+import { useNavigate } from 'react-router-dom'
 
 const AddBlogForm = ({ addBlogFormRef }) => {
   const [title, setTitle] = useState('')
@@ -9,6 +10,7 @@ const AddBlogForm = ({ addBlogFormRef }) => {
   const [url, setUrl] = useState('')
   const queryClient = useQueryClient()
   const showNotification = useNotificationDispatch()
+  const navigate = useNavigate()
 
   const createBlogMutation = useMutation({
     mutationFn: blogService.create,
@@ -35,6 +37,7 @@ const AddBlogForm = ({ addBlogFormRef }) => {
     setTitle('')
     setAuthor('')
     setUrl('')
+    navigate('/blogs')
   }
 
   return (

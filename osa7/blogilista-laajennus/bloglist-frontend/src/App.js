@@ -1,6 +1,5 @@
 import { useRef, useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import { useUserValue, useUserDispatch } from './UserContext'
 import { useNotificationDispatch } from './NotificationContext'
 import BlogList from './components/BlogList'
@@ -13,6 +12,7 @@ import Users from './components/Users'
 import Navigation from './components/Navigation'
 import UserDetails from './components/UserDetails'
 import BlogDetails from './components/BlogDetails'
+import BlogComments from './components/BlogComments'
 import './app.css'
 
 const App = () => {
@@ -20,6 +20,7 @@ const App = () => {
   const dispatch = useUserDispatch()
   const { user } = useUserValue()
   const showNotification = useNotificationDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
@@ -30,48 +31,65 @@ const App = () => {
     }
   }, [])
 
-  const blogsQuery = useQuery({
-    queryKey: ['blogs'],
-    queryFn: blogService.getAll,
-  })
-
-  if (blogsQuery.isInitialLoading) return <div>Loading data...</div>
-  if (blogsQuery.isError) return <div>Service not available</div>
-
-  const blogs = blogsQuery.data || {}
-
   const handleLogout = user => {
     window.localStorage.removeItem('loggedBloglistUser')
     showNotification(`See you soon, ${user.username}!`, 'success')
     dispatch({ type: 'LOGOUT' })
+    navigate('/login')
   }
 
   return (
-    <div>
+    <>
       {!user ? (
         <>
           <Notification />
-          <LoginForm />
+          <Routes>
+            <Route path="/login" element={<LoginForm />} />
+          </Routes>
         </>
       ) : (
         <>
           <Navigation handleLogout={handleLogout} />
           <Notification />
           <h1>Blog app</h1>
-          <Togglable buttonLabel="new blog" ref={addBlogFormRef}>
-            <AddBlogForm addBlogFormRef={addBlogFormRef} />
-          </Togglable>
-          <BlogList blogs={blogs} />
-          <Users />
           <Routes>
-            <Route path="/blogs/:id" element={<BlogDetails />} />
-            <Route path="/blogs" element={<BlogList />} />
-            <Route path="/users/:id" element={<UserDetails />} />
+            <Route
+              path="/blogs"
+              element={
+                <>
+                  <Togglable buttonLabel="new blog" ref={addBlogFormRef}>
+                    <AddBlogForm addBlogFormRef={addBlogFormRef} />
+                  </Togglable>
+                  <BlogList />
+                </>
+              }
+            />
+            <Route
+              path="/blogs/:id"
+              element={
+                <>
+                  <BlogDetails />
+                  <BlogComments />
+                </>
+              }
+            />
             <Route path="/users" element={<Users />} />
+            <Route path="/users/:id" element={<UserDetails />} />
+            <Route
+              path="*"
+              element={
+                <>
+                  <Togglable buttonLabel="new blog" ref={addBlogFormRef}>
+                    <AddBlogForm addBlogFormRef={addBlogFormRef} />
+                  </Togglable>
+                  <BlogList />
+                </>
+              }
+            />
           </Routes>
         </>
       )}
-    </div>
+    </>
   )
 }
 

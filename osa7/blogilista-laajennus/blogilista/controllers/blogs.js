@@ -7,6 +7,16 @@ blogsRouter.get('/', async (req, res) => {
   res.json(blogs)
 })
 
+blogsRouter.get('/:id/comments', async (req, res) => {
+  const blog = await Blog.findById(req.params.id)
+  if (blog) {
+    const comments = blog.comments
+    res.json(comments)
+  } else {
+    res.status(404).end()
+  }
+})
+
 blogsRouter.get('/:id', async (req, res) => {
   const blog = await Blog.findById(req.params.id).populate('user', {
     username: 1,
@@ -17,6 +27,21 @@ blogsRouter.get('/:id', async (req, res) => {
   } else {
     res.status(404).end()
   }
+})
+
+blogsRouter.post('/:id/comments', async (req, res) => {
+  const { id } = req.params
+  const { content } = req.body
+  const blog = await Blog.findById(id)
+
+  if (!blog) {
+    return res.status(404).json({ error: 'Blog not found' })
+  }
+
+  blog.comments.push({ content })
+  const savedBlog = await blog.save()
+
+  res.status(201).json(savedBlog)
 })
 
 blogsRouter.post('/', tokenExtractor, userExtractor, async (req, res) => {
