@@ -5,6 +5,44 @@ import loginService from '../services/login'
 import { useNotificationDispatch } from '../NotificationContext'
 import blogService from '../services/blogs'
 import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
+import { ButtonStyled } from './Navigation'
+
+export const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  &.h1,
+  &.h2,
+  &.h3 {
+    text-align: center;
+  }
+`
+
+export const FormButton = styled(ButtonStyled)`
+  background: green;
+  margin: 15px 0;
+  width: 100%;
+  color: white;
+`
+export const InputWrapper = styled.div`
+  display: flex;
+`
+export const StyledInput = styled.input`
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.2), 0 1px 2px hsla(0, 0%, 0%, 0.2);
+  background-color: white;
+  line-height: 1.5;
+  margin: 5px;
+  &:hover,
+  &:focus {
+    box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.6), 0 1px 2px hsla(0, 0%, 0%, 0.2);
+  }
+`
 
 const LoginForm = () => {
   const [username, setUsername] = useState('')
@@ -33,34 +71,34 @@ const LoginForm = () => {
   }
 
   return (
-    <div>
+    <Wrapper>
       <h2>Log in to application</h2>
       <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
+        <InputWrapper>
+          <StyledInput
             id="username"
             type="text"
             value={username}
             name="Username"
+            placeholder="username"
             onChange={({ target }) => setUsername(target.value)}
           />
-        </div>
-        <div>
-          password
-          <input
+        </InputWrapper>
+        <InputWrapper>
+          <StyledInput
             id="password"
             type="password"
             value={password}
             name="Password"
+            placeholder="password"
             onChange={({ target }) => setPassword(target.value)}
           />
-        </div>
-        <button id="login-button" type="submit">
+        </InputWrapper>
+        <FormButton id="login-button" type="submit">
           login
-        </button>
+        </FormButton>
       </form>
-    </div>
+    </Wrapper>
   )
 }
 

@@ -13,6 +13,7 @@ import Navigation from './components/Navigation'
 import UserDetails from './components/UserDetails'
 import BlogDetails from './components/BlogDetails'
 import BlogComments from './components/BlogComments'
+import { Wrapper } from './components/LoginForm'
 import './app.css'
 
 const App = () => {
@@ -41,53 +42,61 @@ const App = () => {
   return (
     <>
       {!user ? (
-        <>
+        <Wrapper>
           <Notification />
-          <Routes>
-            <Route path="/login" element={<LoginForm />} />
-          </Routes>
-        </>
+          <LoginForm />
+        </Wrapper>
       ) : (
-        <>
+        <div>
           <Navigation handleLogout={handleLogout} />
-          <Notification />
-          <h1>Blog app</h1>
-          <Routes>
-            <Route
-              path="/blogs"
-              element={
-                <>
-                  <Togglable buttonLabel="new blog" ref={addBlogFormRef}>
-                    <AddBlogForm addBlogFormRef={addBlogFormRef} />
-                  </Togglable>
-                  <BlogList />
-                </>
-              }
-            />
-            <Route
-              path="/blogs/:id"
-              element={
-                <>
-                  <BlogDetails />
-                  <BlogComments />
-                </>
-              }
-            />
-            <Route path="/users" element={<Users />} />
-            <Route path="/users/:id" element={<UserDetails />} />
-            <Route
-              path="*"
-              element={
-                <>
-                  <Togglable buttonLabel="new blog" ref={addBlogFormRef}>
-                    <AddBlogForm addBlogFormRef={addBlogFormRef} />
-                  </Togglable>
-                  <BlogList />
-                </>
-              }
-            />
-          </Routes>
-        </>
+          <Wrapper>
+            <Notification />
+            <Routes>
+              <Route
+                path="/blogs"
+                element={
+                  <>
+                    <BlogList />
+                    <Togglable
+                      openLabel="new blog"
+                      closeLabel="cancel"
+                      ref={addBlogFormRef}
+                    >
+                      <AddBlogForm addBlogFormRef={addBlogFormRef} />
+                    </Togglable>
+                  </>
+                }
+              />
+              <Route
+                path="/blogs/:id"
+                element={
+                  <>
+                    <BlogDetails />
+                    <BlogComments />
+                  </>
+                }
+              />
+              <Route path="/users" element={<Users />} />
+              <Route path="/users/:id" element={<UserDetails />} />
+              <Route path="/login" element={<LoginForm />} />
+              <Route
+                path="*"
+                element={
+                  <>
+                    <BlogList />
+                    <Togglable
+                      openLabel="new blog"
+                      closeLabel="cancel"
+                      ref={addBlogFormRef}
+                    >
+                      <AddBlogForm addBlogFormRef={addBlogFormRef} />
+                    </Togglable>
+                  </>
+                }
+              />
+            </Routes>
+          </Wrapper>
+        </div>
       )}
     </>
   )

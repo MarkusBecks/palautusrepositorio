@@ -1,29 +1,44 @@
 import userService from '../services/users'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+
+export const UserLink = styled(Link)`
+  color: black;
+  text-decoration: none;
+  &:hover {
+    color: #00d4ff;
+    text-decoration: underline;
+  }
+`
+
+export const UserContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 1px;
+  min-width: 300px;
+  font-size: 20px;
+  &:nth-of-type(odd) {
+    background: whitesmoke;
+  }
+  &:nth-of-type(odd):hover {
+    background: white;
+  }
+  &:nth-of-type(even):hover {
+    background: whitesmoke;
+  }
+`
 
 const Users = () => {
   const containerStyle = {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-start',
-  }
-
-  const userStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '8px',
-    border: '1px solid #ccc',
-    marginBottom: '5px',
-    width: '20%',
-  }
-
-  const headingStyle = {
-    fontWeight: 'bold',
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '5px',
+    width: '100%',
   }
 
   const usersQuery = useQuery({
@@ -41,15 +56,13 @@ const Users = () => {
   return (
     <>
       <div className="Users-container" style={containerStyle}>
-        <h2>Users</h2>
-        <div style={headingStyle}>
-          <div>Blogs Created</div>
-        </div>
+        <h1>Users</h1>
+        <h2>Blogs Created</h2>
         {sortedUsers.map(user => (
-          <div key={user.id} style={userStyle}>
-            <Link to={`/users/${user.id}`}>{user.name}</Link>
+          <UserContainer key={user.id}>
+            <UserLink to={`/users/${user.id}`}>{user.name}</UserLink>
             <div>{user.blogs.length}</div>
-          </div>
+          </UserContainer>
         ))}
       </div>
     </>

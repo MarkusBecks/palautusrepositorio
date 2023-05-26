@@ -3,6 +3,34 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useUserValue } from '../UserContext'
 import { useNotificationDispatch } from '../NotificationContext'
+import styled from 'styled-components'
+import { CommentButton } from './BlogComments'
+
+export const FlexContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  min-width: 300px;
+  padding: 10px;
+  margin: 1px;
+  border: 1px solid black;
+  border-radius: 5px;
+  &:nth-of-type(odd) {
+    background: whitesmoke;
+  }
+  &:nth-of-type(odd):hover {
+    background: white;
+  }
+  &:nth-of-type(even):hover {
+    background: whitesmoke;
+  }
+`
+
+const BlogButton = styled(CommentButton)`
+  font-size: 14px;
+  padding: 5px 20px;
+`
 
 const BlogDetails = () => {
   const { id } = useParams()
@@ -87,25 +115,32 @@ const BlogDetails = () => {
       <h2>
         {blog.title} by {blog.author}
       </h2>
-      <div>
-        <Link to={blog.url}>{blog.url}</Link>
-      </div>
-      <div className="likes">
-        likes {blog.likes}
-        <button
+      <FlexContainer>
+        <div>URL:</div>
+        <div>
+          <Link to={blog.url}>{blog.url}</Link>
+        </div>
+      </FlexContainer>
+      <FlexContainer>
+        <div>likes: {blog.likes}</div>
+        <BlogButton
           disabled={updateBlogMutation.isLoading}
           onClick={() => handleLike(blog)}
           className="likesButton"
         >
           {updateBlogMutation.isLoading ? 'Updating...' : 'like'}
-        </button>
-      </div>
-      <div>added by {username}</div>
-      {isAuthorized && (
-        <div>
-          <button onClick={() => handleDelete(blog.id)}>remove blog</button>
-        </div>
-      )}
+        </BlogButton>
+      </FlexContainer>
+      <FlexContainer>
+        <div>added by {username}</div>
+        {isAuthorized && (
+          <div>
+            <BlogButton onClick={() => handleDelete(blog.id)}>
+              remove blog
+            </BlogButton>
+          </div>
+        )}
+      </FlexContainer>
     </>
   )
 }

@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import blogService from '../services/blogs'
 import { useNotificationDispatch } from '../NotificationContext'
 import { useNavigate } from 'react-router-dom'
+import { StyledInput, InputWrapper, FormButton, Wrapper } from './LoginForm'
 
 const AddBlogForm = ({ addBlogFormRef }) => {
   const [title, setTitle] = useState('')
@@ -41,12 +42,11 @@ const AddBlogForm = ({ addBlogFormRef }) => {
   }
 
   return (
-    <div>
+    <Wrapper>
       <h2>create new</h2>
       <form onSubmit={createBlog}>
-        <div>
-          title:
-          <input
+        <InputWrapper>
+          <StyledInput
             id="title"
             type="text"
             value={title}
@@ -54,10 +54,9 @@ const AddBlogForm = ({ addBlogFormRef }) => {
             placeholder="title of the blog"
             onChange={({ target }) => setTitle(target.value)}
           />
-        </div>
-        <div>
-          author:
-          <input
+        </InputWrapper>
+        <InputWrapper>
+          <StyledInput
             id="author"
             type="text"
             value={author}
@@ -65,10 +64,9 @@ const AddBlogForm = ({ addBlogFormRef }) => {
             placeholder="author of the blog"
             onChange={({ target }) => setAuthor(target.value)}
           />
-        </div>
-        <div>
-          url:
-          <input
+        </InputWrapper>
+        <InputWrapper>
+          <StyledInput
             id="url"
             type="text"
             value={url}
@@ -76,18 +74,18 @@ const AddBlogForm = ({ addBlogFormRef }) => {
             placeholder="url to the blog post"
             onChange={({ target }) => setUrl(target.value)}
           />
-        </div>
+        </InputWrapper>
         <div>
-          <button
+          <FormButton
             id="create"
             type="submit"
             disabled={createBlogMutation.isLoading}
           >
             {createBlogMutation.isLoading ? 'Creating...' : 'create'}
-          </button>
+          </FormButton>
         </div>
       </form>
-    </div>
+    </Wrapper>
   )
 }
 

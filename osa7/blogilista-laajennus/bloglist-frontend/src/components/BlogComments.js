@@ -3,6 +3,22 @@ import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { useNotificationDispatch } from '../NotificationContext'
 import { useState } from 'react'
+import { StyledInput, InputWrapper } from './LoginForm'
+import { ButtonStyled } from './Navigation'
+import styled from 'styled-components'
+
+export const CommentButton = styled(ButtonStyled)`
+  margin: 0;
+  background: green;
+  color: white;
+  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.2), 0 1px 2px hsla(0, 0%, 0%, 0.2);
+`
+const CommentInput = styled(StyledInput)`
+  margin: 0 10px;
+`
+const CommentsContainer = styled.div`
+  margin: 15px;
+`
 
 const BlogComments = () => {
   const [comment, setComment] = useState('')
@@ -44,8 +60,8 @@ const BlogComments = () => {
     <>
       <h2>Blog comments</h2>
       <form onSubmit={addComment}>
-        <div>
-          <input
+        <InputWrapper>
+          <CommentInput
             id="comment"
             type="text"
             value={comment}
@@ -53,12 +69,12 @@ const BlogComments = () => {
             placeholder="Comment"
             onChange={({ target }) => setComment(target.value)}
           />
-          <button type="submit">
+          <CommentButton type="submit">
             {addCommentMutation.isLoading ? 'Adding...' : 'Add comment'}
-          </button>
-        </div>
+          </CommentButton>
+        </InputWrapper>
       </form>
-      <div>
+      <CommentsContainer>
         {comments.length > 0 ? (
           <ul>
             {comments.map((comment, index) => (
@@ -66,9 +82,9 @@ const BlogComments = () => {
             ))}
           </ul>
         ) : (
-          <div>No comments to show yet.</div>
+          <CommentsContainer>No comments to show yet.</CommentsContainer>
         )}
-      </div>
+      </CommentsContainer>
     </>
   )
 }

@@ -1,6 +1,16 @@
-import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import blogService from '../services/blogs'
+import styled from 'styled-components'
+import { Wrapper } from './LoginForm'
+import { UserContainer, UserLink } from './Users'
+
+export const BlogContainer = styled(UserContainer)`
+  flex-wrap: wrap;
+  width: min-content;
+`
+export const BlogLink = styled(UserLink)`
+  font-size: 16px;
+`
 
 const BlogList = () => {
   const blogsQuery = useQuery({
@@ -16,27 +26,21 @@ const BlogList = () => {
   const descendingLikes = (a, b) => b.likes - a.likes
   const sortedBlogs = [...blogs].sort(descendingLikes)
 
-  const blogStyle = {
-    padding: 5,
-    margin: '5px 0',
-    border: '1px solid black',
-  }
-
   return (
-    <div>
-      <h2>Blog list</h2>
+    <Wrapper>
+      <h1>Blog list</h1>
       {sortedBlogs.length > 0 ? (
         sortedBlogs.map(blog => (
-          <div key={blog.id} style={blogStyle}>
-            <Link to={`/blogs/${blog.id}`}>
+          <BlogContainer key={blog.id}>
+            <BlogLink to={`/blogs/${blog.id}`}>
               {blog.title} by {blog.author}
-            </Link>
-          </div>
+            </BlogLink>
+          </BlogContainer>
         ))
       ) : (
         <div>No blogs to show yet.</div>
       )}
-    </div>
+    </Wrapper>
   )
 }
 

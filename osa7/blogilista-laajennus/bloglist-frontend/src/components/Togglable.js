@@ -1,7 +1,8 @@
 import React, { useState, useImperativeHandle, forwardRef } from 'react'
 import PropTypes from 'prop-types'
+import { FormButton, Wrapper } from './LoginForm'
 
-const Togglable = forwardRef(({ buttonLabel, children }, ref) => {
+const Togglable = forwardRef(({ openLabel, closeLabel, children }, ref) => {
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -18,20 +19,21 @@ const Togglable = forwardRef(({ buttonLabel, children }, ref) => {
   })
 
   return (
-    <div>
+    <Wrapper>
       <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{buttonLabel}</button>
+        <FormButton onClick={toggleVisibility}>{openLabel}</FormButton>
       </div>
       <div style={showWhenVisible}>
         {children}
-        <button onClick={toggleVisibility}>{buttonLabel}</button>
+        <FormButton onClick={toggleVisibility}>{closeLabel}</FormButton>
       </div>
-    </div>
+    </Wrapper>
   )
 })
 
 Togglable.propTypes = {
-  buttonLabel: PropTypes.string.isRequired,
+  openLabel: PropTypes.string.isRequired,
+  closeLabel: PropTypes.string.isRequired,
 }
 
 Togglable.displayName = 'Togglable'
