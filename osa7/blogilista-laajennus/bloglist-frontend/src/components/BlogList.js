@@ -16,6 +16,7 @@ const BlogList = () => {
   const blogsQuery = useQuery({
     queryKey: ['blogs'],
     queryFn: blogService.getAll,
+    refetchOnWindowFocus: false,
   })
 
   if (blogsQuery.isInitialLoading) return <div>Loading data...</div>

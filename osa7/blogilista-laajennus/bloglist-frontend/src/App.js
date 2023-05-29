@@ -14,7 +14,6 @@ import UserDetails from './components/UserDetails'
 import BlogDetails from './components/BlogDetails'
 import BlogComments from './components/BlogComments'
 import { Wrapper } from './components/LoginForm'
-import './app.css'
 
 const App = () => {
   const addBlogFormRef = useRef()

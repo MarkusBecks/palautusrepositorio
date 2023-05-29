@@ -32,13 +32,11 @@ const UserDetails = () => {
       {user.blogs.length > 0 ? (
         <div>
           <h2>Added blogs:</h2>
-          <ul>
-            {user.blogs.map(blog => (
-              <CenteredBlog key={blog.id}>
-                <BlogLink to={`/blogs/${blog.id}`}>{blog.title}</BlogLink>
-              </CenteredBlog>
-            ))}
-          </ul>
+          {user.blogs.map(blog => (
+            <CenteredBlog key={blog.id}>
+              <BlogLink to={`/blogs/${blog.id}`}>{blog.title}</BlogLink>
+            </CenteredBlog>
+          ))}
         </div>
       ) : (
         <div>No blogs added yet.</div>

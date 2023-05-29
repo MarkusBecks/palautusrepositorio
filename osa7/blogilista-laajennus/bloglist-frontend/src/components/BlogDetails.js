@@ -42,6 +42,10 @@ const BlogDetails = () => {
   const blogQuery = useQuery({
     queryKey: ['blogs', 'getBlog', id],
     queryFn: () => blogService.get(id),
+    refetchOnWindowFocus: false,
+    onError: error => {
+      console.error('Failed to fetch blog details:', error)
+    },
   })
 
   const blog = blogQuery.data || {}
@@ -76,7 +80,6 @@ const BlogDetails = () => {
   const deleteBlogMutation = useMutation({
     mutationFn: blogService.destroy,
     onSuccess: () => {
-      queryClient.invalidateQueries(['blogs', 'getBlog', id])
       showNotification(
         `Blog '${blog.title}' by ${blog.author} deleted.`,
         'success'

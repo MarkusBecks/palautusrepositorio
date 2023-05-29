@@ -29,6 +29,7 @@ const BlogComments = () => {
   const blog = useQuery({
     queryKey: ['blogs', 'getBlog', id],
     queryFn: () => blogService.get(id),
+    refetchOnWindowFocus: false,
   })
 
   const comments = blog.data ? blog.data.comments : []
