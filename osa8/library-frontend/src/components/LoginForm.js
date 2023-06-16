@@ -25,7 +25,7 @@ const LoginForm = ({ show, setToken }) => {
     event.preventDefault()
 
     try {
-      const result = await login({ variables: { username, password } }) //eslint-disable-line
+      await login({ variables: { username, password } })
     } catch (error) {
       console.log(error)
     }
