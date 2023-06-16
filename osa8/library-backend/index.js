@@ -172,8 +172,8 @@ const resolvers = {
           query.genres = { $in: [genre] }
         }
 
-        let books = await Book.find(query).populate('author', 'name')
-        console.log('Fetched books:', books)
+        let books = await Book.find(query).populate('author')
+        console.log('Fetched books')
         return books
       } catch (error) {
         console.error('Failed to fetch books:', error)
@@ -205,7 +205,6 @@ const resolvers = {
     author: async (parent) => {
       try {
         const author = await Author.findById(parent.author)
-        console.log('author: ', author)
         return author
       } catch (error) {
         throw new Error('Failed to fetch author')
@@ -213,7 +212,11 @@ const resolvers = {
     },
   },
   Mutation: {
-    addBook: async (root, args, { currentUser }) => {
+    addBook: async (
+      root,
+      { title, author, published, genres },
+      { currentUser }
+    ) => {
       if (!currentUser) {
         throw new GraphQLError('not authenticated', {
           extensions: { code: 'BAD_USER_INPUT' },
@@ -221,47 +224,51 @@ const resolvers = {
       }
 
       try {
-        if (args.title.length < 5) {
+        if (title.length < 5) {
           throw new GraphQLError(
             'Book title must be at least 5 characters long',
             {
               extensions: {
                 code: 'BAD_USER_INPUT',
-                invalidArgs: args.title,
+                invalidArgs: title,
               },
             }
           )
         }
 
-        if (args.author.length < 4) {
+        if (author.length < 4) {
           throw new GraphQLError(
             'Author name must be at least 4 characters long',
             {
               extensions: {
                 code: 'BAD_USER_INPUT',
-                invalidArgs: args.author,
+                invalidArgs: author,
               },
             }
           )
         }
 
-        let existingAuthor = await Author.findOne({ name: args.author })
-        console.log('existingAuthor: ', existingAuthor)
+        let existingAuthor = await Author.findOne({ name: author.name })
         let book
 
         if (!existingAuthor) {
-          const author = new Author({
-            name: args.author,
+          const newAuthor = new Author({
+            name: author,
             born: null,
             bookCount: 1,
           })
-          existingAuthor = await author.save()
+          existingAuthor = await newAuthor.save()
         } else {
           existingAuthor.bookCount++
           await existingAuthor.save()
         }
 
-        book = new Book({ ...args, author: existingAuthor._id })
+        book = new Book({
+          title,
+          author: existingAuthor._id,
+          published,
+          genres,
+        })
         await book.save()
 
         return book
@@ -296,7 +303,7 @@ const resolvers = {
         const updatedAuthor = await Author.findById(author._id)
         return updatedAuthor
       } catch (error) {
-        throw new GraphQLError('Failed to update author: ' + error.message)
+        throw new GraphQLError(error.message)
       }
     },
     createUser: async (root, args) => {
@@ -343,11 +350,9 @@ const server = new ApolloServer({
 startStandaloneServer(server, {
   listen: config.PORT,
   context: async ({ req, res }) => {
-    console.log('req.headers.authorization: ', req.headers.authorization)
     const auth = req ? req.headers.authorization : null
     if (auth && auth.startsWith('Bearer ')) {
       const decodedToken = jwt.verify(auth.substring(7), config.JWT_SECRET)
-      console.log('decodedToken :', decodedToken)
       const currentUser = await User.findById(decodedToken.id)
       return { currentUser }
     }

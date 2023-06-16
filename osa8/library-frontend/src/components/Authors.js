@@ -30,6 +30,7 @@ const Authors = (props) => {
     event.preventDefault()
 
     editAuthorMutation({ variables: { name, setBornTo: born } })
+    console.log(`${name}'s born year set to ${born}`)
 
     setName('')
     setBorn('')
@@ -41,7 +42,7 @@ const Authors = (props) => {
       <table>
         <tbody>
           <tr>
-            <th></th>
+            <th>name</th>
             <th>born</th>
             <th>books</th>
           </tr>
