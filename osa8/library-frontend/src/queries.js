@@ -28,6 +28,7 @@ export const ME = gql`
   query {
     me {
       favoriteGenre
+      username
     }
   }
 `
