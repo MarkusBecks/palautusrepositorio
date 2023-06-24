@@ -11,7 +11,6 @@ const LoginForm = ({ show, setToken, setPage }) => {
   useEffect(() => {
     if (result.data) {
       const token = result.data.login.value
-      console.log('token :', token)
       setToken(token)
       localStorage.setItem('library-user-token', token)
     }
@@ -27,6 +26,7 @@ const LoginForm = ({ show, setToken, setPage }) => {
     try {
       await login({ variables: { username, password } })
       setPage('recommendations')
+      console.log(`Logged in as ${username}`)
     } catch (error) {
       console.log(error)
     }
