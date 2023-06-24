@@ -43,15 +43,22 @@ const resolvers = {
       allAuthors: async () => {
         try {
           const authors = await Author.find({})
-          const authorCountPromises = authors.map(async (author) => {
+
+          // Map over each author and create an array of promises
+          const authorBookCountPromises = authors.map(async (author) => {
+            // Count the number of books associated with the current author
             const bookCount = await Book.countDocuments({ author: author._id })
+            
+            // Return author object with bookCount
             return {
               name: author.name,
               born: author.born,
               bookCount: bookCount,
             }
           })
-          const authorsWithBookCount = await Promise.all(authorCountPromises)
+          // Wait for all the promises to resolve
+          const authorsWithBookCount = await Promise.all(authorBookCountPromises)
+         // Return the array of authors with their book counts, avoiding the N+1 problem
           return authorsWithBookCount
         } catch (error) {
           throw new Error('Failed to fetch authors')
