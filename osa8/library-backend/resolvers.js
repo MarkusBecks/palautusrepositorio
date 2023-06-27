@@ -41,6 +41,7 @@ const resolvers = {
         return context.currentUser
       },
       allAuthors: async () => {
+        // Avoid the potential n+1 issue by fetching all authors in a single database query and then counting the books for each author using a single query per author
         try {
           const authors = await Author.find({})
 
@@ -58,7 +59,7 @@ const resolvers = {
           })
           // Wait for all the promises to resolve
           const authorsWithBookCount = await Promise.all(authorBookCountPromises)
-         // Return the array of authors with their book counts, avoiding the N+1 problem
+         // Return the array of authors with their book counts
           return authorsWithBookCount
         } catch (error) {
           throw new Error('Failed to fetch authors')
