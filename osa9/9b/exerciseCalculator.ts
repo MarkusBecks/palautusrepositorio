@@ -31,14 +31,12 @@ const totalHours: number = args.slice(1) // exclude the target value
     .reduce(add); // calculate the total
 
 const trainingDaysArr: number[] = []; 
-
 args.slice(1).forEach((el) => {
     const num = Number(el);
     if (num > 0) {
         trainingDaysArr.push(num);
     }
 });
-
 const trainingDays = trainingDaysArr.length;
 
 const average: number = totalHours / periodLength;
