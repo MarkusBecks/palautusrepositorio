@@ -31,10 +31,8 @@ const Books = (props) => {
       : []
     : data.allBooks
 
-  console.log('books :', books)
   const genres =
     Array.from(new Set(data.allBooks.flatMap((book) => book.genres))) || []
-  console.log('genres: ', genres)
 
   const filterByGenre = (genre) => {
     console.log(`Filtering books by genre: ${genre}`)
@@ -81,7 +79,7 @@ const Books = (props) => {
         ))}
       </div>
       {selectedGenre ? (
-        <button onClick={() => removeGenreFilter()}>show all genres</button>
+        <button style={{ color: 'lightseagreen' }} onClick={() => removeGenreFilter()}>show all genres</button>
       ) : null}
     </div>
   )

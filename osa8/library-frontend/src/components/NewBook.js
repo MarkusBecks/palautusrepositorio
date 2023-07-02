@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { ADD_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries'
-import { useMutation } from '@apollo/client'
+import { ADD_BOOK, ALL_BOOKS, ALL_AUTHORS, BOOK_ADDED } from '../queries'
+import { useMutation, useSubscription } from '@apollo/client'
+import { computeHeadingLevel } from '@testing-library/react'
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
@@ -12,6 +13,16 @@ const NewBook = (props) => {
   const [addBook] = useMutation(ADD_BOOK, {
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
   })
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const bookAdded = data.data.bookAdded;
+      if (bookAdded) {
+        console.log('bookAdded: ', bookAdded)
+        window.alert(`New book added!\nTitle: ${bookAdded.title}\nAuthor: ${bookAdded.author.name}`);
+      }
+    },
+  });
 
   if (!props.show) {
     return null

@@ -30,11 +30,17 @@ const Recommended = (props) => {
     )
   }
 
-  const favoriteGenre = userData.me.favoriteGenre
+  const favoriteGenre = userData?.me?.favoriteGenre
   const books = booksData.allBooks
   const favoriteGenBooks = books.filter((book) =>
     book.genres.includes(favoriteGenre)
   )
+
+  if (!favoriteGenre) {
+return (<div>
+  No favorite genre could be found. Nothing to display here.
+</div>)
+  }
 
   return (
     <div>
