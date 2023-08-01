@@ -1,8 +1,8 @@
 import express, { Request, Response } from 'express';
 import patientService from '../services/patientService';
 import toNewPatientEntry from '../utils';
-import { Patient, EntryRequestBody, Params } from '../types';
-import { isValidEntry, parseDiagnosisCodes } from '../utils';
+import { Patient, Params, EntryWithoutId } from '../types';
+import { parseDiagnosisCodes, isInvalidEntry } from '../utils';
 
 const router = express.Router();
 
@@ -23,11 +23,14 @@ router.get('/', (_req, res) => {
 
 router.post(
 	'/:id/entries',
-	(req: Request<Params, unknown, EntryRequestBody>, res: Response) => {
-		const { entry } = req.body;
+	(req: Request<Params, unknown, EntryWithoutId>, res: Response) => {
+		console.log('Request Body:', req.body); // Log the received request body
+		const entry = req.body;
+		console.log('Entry:', entry);
 		const { id: patientId } = req.params;
 
 		try {
+			console.log('Entry:', entry); // Log the extracted entry object
 			const patient = patientService.getPatient(patientId);
 
 			if (!patient) {
@@ -35,22 +38,25 @@ router.post(
 			}
 
 			// Validate the entry using isValidEntry
-			const validationErrors = isValidEntry(entry);
-			if (!validationErrors) {
-				return res.status(400).json({ error: 'Invalid entry data' });
+			const validationErrorMessage = isInvalidEntry(entry);
+			if (validationErrorMessage) {
+				return res.status(400).json({ error: validationErrorMessage });
 			}
 
 			// Parse diagnosis codes
 			const diagnosisCodes = parseDiagnosisCodes(entry);
 			const modifiedEntry = { ...entry, diagnosisCodes };
+			console.log('modifiedEntry:', modifiedEntry);
 
 			const modifiedPatient = patientService.addEntry(patientId, modifiedEntry);
+			console.log('Modified Patient:', modifiedPatient); // Log the updated patient
 			return res.json(modifiedPatient);
 		} catch (error: unknown) {
-			let errorMessage = 'Something went wrong.';
+			let errorMessage = 'Failed to add entry.';
 			if (error instanceof Error) {
 				errorMessage += ' Error: ' + error.message;
 			}
+			console.error(errorMessage); // Log the error
 			return res.status(400).send(errorMessage);
 		}
 	}
@@ -62,7 +68,7 @@ router.post('/', (req: Request<object, unknown, Patient>, res: Response) => {
 		const addedEntry = patientService.addPatient(newPatientEntry);
 		res.json(addedEntry);
 	} catch (error: unknown) {
-		let errorMessage = 'Something went wrong.';
+		let errorMessage = 'Adding patient failed.';
 		if (error instanceof Error) {
 			errorMessage += ' Error: ' + error.message;
 		}
